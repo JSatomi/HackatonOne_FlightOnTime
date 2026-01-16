@@ -36,7 +36,7 @@ public class PredictionService {
             throw new IllegalArgumentException("Origen y destino no pueden ser iguales");
         }
 
-        if (request.getDistanciaKm() > 300) {
+        if (request.getDistancia_km() > 300) {
             dto.setPrevision("Retrasado");
             dto.setProbabilidad(0.78);
         } else {

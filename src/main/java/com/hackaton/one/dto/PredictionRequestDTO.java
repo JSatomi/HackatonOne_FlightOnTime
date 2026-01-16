@@ -30,8 +30,8 @@ public class PredictionRequestDTO {
 
     @NotNull
     @Future
-    private LocalDateTime fechaPartida;
+    private LocalDateTime fecha_partida;
 
     @NotNull
-    private Integer distanciaKm;
+    private Integer distancia_km;
 }

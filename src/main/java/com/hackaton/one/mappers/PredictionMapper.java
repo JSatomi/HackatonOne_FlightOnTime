@@ -16,8 +16,8 @@ public class PredictionMapper {
         predictionHistory.setAirline(request.getAerolinea());
         predictionHistory.setOrigin(request.getOrigen());
         predictionHistory.setDestination(request.getDestino());
-        predictionHistory.setDepartureDate(request.getFechaPartida());
-        predictionHistory.setDistanceKm(request.getDistanciaKm());
+        predictionHistory.setDepartureDate(request.getFecha_partida());
+        predictionHistory.setDistanceKm(request.getDistancia_km());
         predictionHistory.setPrevision(response.getPrevision());
         predictionHistory.setProbabilidad(response.getProbabilidad());
         predictionHistory.setCreatedAt(LocalDateTime.now());
