@@ -28,10 +28,14 @@ public class PredictionService {
         return response;
     }
 
-
     //Simulacion para saber si funciona
     private PredictionResponseDTO executePrediccion(PredictionRequestDTO request){
         PredictionResponseDTO dto = new PredictionResponseDTO();
+
+        if(request.getOrigen().equals(request.getDestino())){
+            throw new IllegalArgumentException("Origen y destino no pueden ser iguales");
+        }
+
         if (request.getDistanciaKm() > 300) {
             dto.setPrevision("Retrasado");
             dto.setProbabilidad(0.78);
@@ -39,8 +43,6 @@ public class PredictionService {
             dto.setPrevision("A tiempo");
             dto.setProbabilidad(0.25);
         }
-
         return dto;
     }
-
 }

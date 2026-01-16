@@ -1,5 +1,9 @@
 package com.hackaton.one.dto;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,9 +15,23 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PredictionRequestDTO {
+
+    @NotBlank
+    @Size(min=2, max=10)
     private String aerolinea;
+
+    @NotBlank
+    @Size(min=2, max=3)
     private String origen;
+
+    @NotBlank
+    @Size(min=2, max=3)
     private String destino;
+
+    @NotNull
+    @Future
     private LocalDateTime fechaPartida;
+
+    @NotNull
     private Integer distanciaKm;
 }
