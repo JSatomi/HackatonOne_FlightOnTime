@@ -3,13 +3,17 @@ package com.hackaton.one.service;
 import com.hackaton.one.model.User;
 import com.hackaton.one.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class UserService {
+public class UserService{
 
     private final UserRepository userRepository;
 
