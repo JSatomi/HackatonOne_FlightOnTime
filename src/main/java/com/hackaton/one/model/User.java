@@ -2,6 +2,10 @@ package com.hackaton.one.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,11 +28,21 @@ public class User implements UserDetails {
     private Integer id;
 
     @Basic
-    @Column(nullable = false)
+    @NotBlank(message = "Username obligatorio")
+    @Column(unique = true, nullable = false)
     private String username;
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Pattern(
+            regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).*$",
+            message = "Password debe tener mayuscula, minusculas y almenos un numero"
+    )
     private String password;
+    @NotBlank(message = "Firstname es obligatorio")
     private String firstname;
+    @NotBlank(message = "Lastname es obligatorio")
     private String lastname;
+    @Column(unique = true, nullable = false)
+    @Email(message = "Formato incorrecto")
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;

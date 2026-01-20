@@ -12,7 +12,8 @@ import java.util.Map;
 // Si algun dato se manda vacio, null, o una fecha pasada aqui se captura
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class
+GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String,String>> handleValidationErrors(
@@ -23,13 +24,10 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(
                 err -> errors.put(err.getField(),err.getDefaultMessage())
         );
-
         return ResponseEntity.badRequest().body(errors);
     }
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex){
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
-
 }

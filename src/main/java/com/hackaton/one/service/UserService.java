@@ -1,5 +1,8 @@
 package com.hackaton.one.service;
 
+import com.hackaton.one.dto.UserDTO;
+import com.hackaton.one.mappers.UserMapper;
+import com.hackaton.one.model.Role;
 import com.hackaton.one.model.User;
 import com.hackaton.one.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +13,26 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+
+import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
 @RequiredArgsConstructor
 @Service
 public class UserService{
 
     private final UserRepository userRepository;
+
+    public void changeRole(Integer id, Role role) {
+        if(role == null){
+            throw new IllegalArgumentException("El rol no puede ser nulo");
+        }
+
+        User u = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        u.setRole(role);
+        userRepository.save(u);
+    }
 
     //Manejamos errores
     public static class ResourceNotFoundException extends RuntimeException{
@@ -25,15 +42,19 @@ public class UserService{
     }
 
     //Obtenemos todos los usuarios para listarlos
-    public ArrayList<User> listUser() {
-        return (ArrayList<User>) userRepository.findAll();
+    public List<UserDTO> listUser() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserMapper::toDTO)
+                .toList();
+        //return (ArrayList<User>) userRepository.findAll();
     }
 
     //Actualizamos usuarios
     public User updateUser(User user, Integer id){
 
         User u = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado!"));
 
         if(user.getUsername() != null){
             u.setUsername(user.getUsername());

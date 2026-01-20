@@ -6,6 +6,7 @@ import com.hackaton.one.jwt.JwtService;
 import com.hackaton.one.model.Role;
 import com.hackaton.one.model.User;
 import com.hackaton.one.repositories.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,7 +47,14 @@ public class AuthService {
     }
 
 
-    public AuthResponse register(RegisterRequest request){
+    public AuthResponse register(@Valid RegisterRequest request){
+        if(userRepository.existsByUsername(request.getUsername())){
+            throw new IllegalArgumentException("Username ya existe");
+        }
+        if(userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email ya existe");
+        }
+
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
