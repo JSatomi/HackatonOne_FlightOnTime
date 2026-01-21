@@ -20,6 +20,4 @@ public class PredictionController {
     public ResponseEntity<PredictionResponseDTO> predict (@Valid @RequestBody PredictionRequestDTO request){
         return ResponseEntity.ok(service.predict(request));
     }
-
-
 }

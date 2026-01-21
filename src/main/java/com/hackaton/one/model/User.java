@@ -1,6 +1,7 @@
 package com.hackaton.one.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -36,6 +37,7 @@ public class User implements UserDetails {
             regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).*$",
             message = "Password debe tener mayuscula, minusculas y almenos un numero"
     )
+    @JsonIgnore
     private String password;
     @NotBlank(message = "Firstname es obligatorio")
     private String firstname;

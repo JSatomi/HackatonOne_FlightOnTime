@@ -3,14 +3,13 @@ package com.hackaton.one.controller;
 import com.hackaton.one.dto.UserDTO;
 import com.hackaton.one.model.Role;
 import com.hackaton.one.model.User;
-import com.hackaton.one.repositories.UserRepository;
 import com.hackaton.one.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,5 +41,16 @@ public class UserController {
     public ResponseEntity<?> cambiarRole(@PathVariable Integer id, @RequestParam Role role){
         service.changeRole(id, role);
         return ResponseEntity.ok("Rol actualizado");
+    }
+
+    @GetMapping("/user/me")
+    public UserDTO obtenerUsuarioLogeado(Authentication a){
+        if(a == null) throw new RuntimeException("No autenticado");
+        User u = (User) a.getPrincipal();
+        return new UserDTO(
+                u.getId(),
+                u.getUsername(),
+                u.getEmail(),
+                u.getRole());
     }
 }
