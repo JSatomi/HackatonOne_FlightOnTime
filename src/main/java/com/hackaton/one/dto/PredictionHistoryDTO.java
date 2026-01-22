@@ -1,23 +1,18 @@
-package com.hackaton.one.model;
+package com.hackaton.one.dto;
 
-
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table
-public class PredictionHistory {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Basic
+public class PredictionHistoryDTO {
+
     private String airline;
     private String origin;
     private String destination;
@@ -26,8 +21,6 @@ public class PredictionHistory {
     private String prevision;
     private Double probabilidad;
     private LocalDateTime createdAt;
-    @ManyToOne
-    @JoinColumn(name = "name_id")
-    private User user;
 
 }
+

@@ -12,6 +12,7 @@ public class PredictionMapper {
             PredictionRequestDTO request,
             PredictionResponseDTO response)
     {
+
         PredictionHistory predictionHistory = new PredictionHistory();
         predictionHistory.setAirline(request.getAerolinea());
         predictionHistory.setOrigin(request.getOrigen());

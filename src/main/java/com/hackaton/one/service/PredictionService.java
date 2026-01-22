@@ -4,8 +4,13 @@ import com.hackaton.one.dto.PredictionRequestDTO;
 import com.hackaton.one.dto.PredictionResponseDTO;
 import com.hackaton.one.mappers.PredictionMapper;
 import com.hackaton.one.model.PredictionHistory;
+import com.hackaton.one.model.User;
 import com.hackaton.one.repositories.PredictionHistoryRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class PredictionService {
@@ -18,21 +23,41 @@ public class PredictionService {
     }
 
     public PredictionResponseDTO predict(PredictionRequestDTO request) {
+
+
+        User user = (User) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+
+        boolean exists = repository.existsByUserAndAirlineAndOriginAndDestinationAndDepartureDateAndDistanceKm(
+                user,
+                request.getAerolinea(),
+                request.getOrigen(),
+                request.getDestino(),
+                request.getFecha_partida(),
+                request.getDistancia_km()
+        );
+
+        if (exists) {
+            throw new IllegalArgumentException("Esta predicción ya fue registrada");
+        }
+
         //Ejecucion del modelo ML
         PredictionResponseDTO response = executePrediccion(request);
-
         //Guardamos el historial
-        PredictionHistory predictionHistory = PredictionMapper.toEntity(request,response);
+        PredictionHistory predictionHistory = PredictionMapper.toEntity(request, response);
+
+        predictionHistory.setUser(user);
         repository.save(predictionHistory);
 
         return response;
     }
 
     //Simulacion para saber si funciona
-    private PredictionResponseDTO executePrediccion(PredictionRequestDTO request){
+    @Transactional
+    private PredictionResponseDTO executePrediccion(PredictionRequestDTO request) {
         PredictionResponseDTO dto = new PredictionResponseDTO();
 
-        if(request.getOrigen().equals(request.getDestino())){
+        if (request.getOrigen().equals(request.getDestino())) {
             throw new IllegalArgumentException("Origen y destino no pueden ser iguales");
         }
 
@@ -44,5 +69,16 @@ public class PredictionService {
             dto.setProbabilidad(0.25);
         }
         return dto;
+    }
+
+
+    public List<PredictionHistory> getMyHistory() {
+
+        User user = (User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        return repository.findByUserOrderByCreatedAtDesc(user);
     }
 }
