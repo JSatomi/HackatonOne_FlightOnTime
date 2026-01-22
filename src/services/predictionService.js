@@ -8,8 +8,19 @@ export const predictFlight = async (data) => {
   const response = await axios.post(API_URL, data, {
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
-    }
+    },
+  });
+
+  return response.data;
+};
+
+export const getMyHistory = async () => {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.get(`${API_URL}/myHistory`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   return response.data;
