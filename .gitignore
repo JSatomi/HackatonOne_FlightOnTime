@@ -1,0 +1,16 @@
+# Java
+target/
+*.class
+
+# Node / React
+front/node_modules/
+front/dist/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

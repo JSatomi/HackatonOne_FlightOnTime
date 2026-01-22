@@ -1,0 +1,30 @@
+services:
+  # Servicio de Base de Datos
+  db:
+    image: mysql:8.0
+    container_name: flight-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: flightdb
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306" # Tu PC accede por el 3307 para no chocar con un MySQL local
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Tu Aplicación (Imagen que acabas de crear)
+  app:
+    image: flight-app # El nombre que le diste a tu imagen al crearla
+    container_name: flight-app-container
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy # Espera a que MySQL esté listo para recibir conexiones
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/flightdb?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root

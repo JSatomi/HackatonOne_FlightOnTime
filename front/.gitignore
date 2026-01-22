@@ -22,3 +22,21 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Directorios de compilación y salida
+/target/
+/dist/
+/node_modules/
+
+# Configuración de Editores (IntelliJ, VS Code)
+/.idea/
+/*.iml
+/.vscode/
+
+# Archivos de sistema y logs
+*.log
+.DS_Store
+
+# Variables de entorno (Seguridad)
+.env
+.env.local
