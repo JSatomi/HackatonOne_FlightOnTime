@@ -46,6 +46,11 @@ function Dashboard() {
   Nueva Predicción
 </button>
 
+<button onClick={() => navigate("/history")}>
+  Ver historial
+</button>
+
+
       <br />
       <button onClick={logout}>Cerrar sesión</button>
     </div>
