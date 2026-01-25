@@ -1,0 +1,243 @@
+# ✈️ FlightOnTime
+
+FlightOnTime es una solución Full-Stack diseñada para la predicción de retrasos en vuelos. Integra modelos de Machine Learning,
+Backend seguro con JWT y una interfaz de usuario moderna construida en React.
+
+El objetivo del sistema es permitir que un usuario autenticado pueda **predecir si un vuelo saldrá a tiempo o con retraso**, así como
+**consultar su historial de predicciones**.
+
+---
+
+## Descripción general
+
+FlightOnTime nace como una solución predictiva para el sector de **Aviación Civil / Logística / Transporte Aéreo**, donde aborda el problema de 
+puntualidad es un factor crítico para la eficiencia operativa para aerolíneas, aeropuertos y pasajeros.
+
+El sistema consume información de vuelos y, mediante un modelo predictivo, estima la probabilidad de retraso. Todo el flujo está protegido mediante autenticación JWT.
+
+---
+
+## Arquitectura del proyecto
+
+El proyecto sigue una arquitectura **cliente‑servidor** bien definida:
+
+```
+El proyecto sigue una arquitectura cliente‑servidor desacoplada:
+
+[ Frontend: React ] <─── HTTP/JSON/JWT ───> [ Backend: Spring Boot ]
+       │                                            │
+       ▼                                            ▼
+[ Tailwind CSS ]                               [ DB: MySQL ]
+
+[ Backend: Spring Boot ] ── API REST ──> [ Cloud ML Model ]
+
+```
+
+---
+
+## Frontend
+
+### Tecnologías
+
+* React
+* Vite
+* Tailwind CSS
+* React Router DOM
+* Axios
+
+### Funcionalidades
+
+* Login de usuario
+* Registro de usuario
+* Rutas protegidas (JWT)
+* Predicción de vuelos
+* Historial de predicciones
+* Manejo de errores (401, credenciales inválidas)
+
+### Estructura principal
+
+```
+src/
+├── components/
+├── pages/
+│   ├── Login.jsx
+│   ├── Register.jsx
+│   ├── Dashboard.jsx
+│   ├── History.jsx
+│   └── Prediction.jsx
+├── services/
+│   ├── api.js
+│   ├── authService.js
+│   ├── predictionService.js
+│   └── userService.js
+├── routes/
+│   └── ProtectedRoute.jsx
+└── main.jsx
+```
+
+---
+
+## Backend
+
+### Tecnologías
+
+* Java 21+
+* Spring Boot
+* Spring Security
+* JWT (JSON Web Tokens)
+* JPA / Hibernate
+* MySQL
+
+### Funcionalidades
+
+* Autenticación y registro de usuarios
+* Generación y validación de JWT
+* Endpoints protegidos
+* Registro de predicciones por usuario
+* Consulta de historial personal
+
+### Estructura principal
+```
+  src/main/java/com.hackaton.one/
+├── auth/                # Controladores y servicios de autenticación (Login/Registro)
+├── configuration/       # Configuraciones de Seguridad, CORS y Clientes API Externos
+├── controller/          # Endpoints REST de la aplicación (Prediction, User)
+├── dto/                 # Objetos de Transferencia de Datos (Request/Response)
+├── error/               # Manejo global de excepciones y respuestas de error personalizadas
+├── jwt/                 # Lógica de filtros, generación y validación de tokens JWT
+├── mappers/             # Conversión entre Entidades (Modelos) y DTOs
+├── model/               # Entidades de JPA que representan las tablas en MySQL
+├── repositories/        # Interfaces de Spring Data JPA para acceso a la base de datos
+└── service/             # Lógica de negocio principal y comunicación con IA
+```
+---
+
+#### Componentes clave 
+* auth/: Gestiona el flujo de entrada al sistema, integrando AuthService para la validación de credenciales.
+* configuration/: Incluye SecurityConfiguration para definir qué rutas son públicas o privadas, y WebClienteMLConfig para la conexión con la nube.
+* dto/: Clases como PredictionRequestDTO aseguran que solo se reciban y envíen los datos necesarios, protegiendo la integridad de la base de datos.
+* jwt/: El JwtAuthenticationFilter intercepta cada petición para validar la identidad del usuario antes de permitir el acceso.
+  resources/:
+* db.migration/: Contiene scripts flyway para el versionado de la base de datos.
+* application.properties: Configuración central de puertos, base de datos y llaves secretas.
+
+## Seguridad
+
+* Autenticación basada en JWT
+* Protección de rutas en Frontend y Backend
+* Interceptor Axios para envío automático del token
+
+Ejemplo de Header enviado:
+
+```
+Authorization: Bearer <token>
+```
+
+---
+
+## Docker
+
+El proyecto está preparado para ejecutarse mediante **Docker** ya que esta completamente dockerizado, garantizando su despliegue y portabilidad en 
+cualquier entorno de manera idéntica.
+
+Incluye:
+
+* Contenedor para el Backend (Java)
+* Contenedor para la Base de Datos (Imagen oficial de MySQL 8 configurada con persistencia de datos)
+* Contenedor para el Frontend (React (Vite))
+* Configuración lista para docker-compose
+
+---
+
+## Instalación y ejecución
+La forma más rápida de ejecutar el proyecto completo es usando Docker Compose:
+
+
+Clonar el repositorio:
+
+```bash
+git clone https://github.com/JSatomi/HackatonOne_FlightOnTime.git
+cd HackatonOne_FlightOnTime
+```
+Levantar servicios:
+
+```Bash
+docker-compose up --build
+```
+
+Endpoints locales:
+
+*Frontend: http://localhost:5173
+*Backend API: http://localhost:8080
+
+### Backend
+
+```bash
+mvn clean package
+docker build -t flightontime-backend .
+docker run -p 8080:8080 flightontime-backend
+```
+
+### Frontend
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+## 📊 Flujo de uso
+
+1. El usuario se registra
+2. Inicia sesión
+3. Se genera un JWT
+4. Accede al Dashboard
+5. Realiza una predicción
+6. Consulta su historial
+
+---
+
+## Manejo de errores
+
+* **401 Unauthorized**: Token inválido o no enviado
+* **Credenciales incorrectas**: Login fallido
+* Validaciones de formulario en frontend
+
+---
+
+## Objetivo del proyecto
+
+Este proyecto fue desarrollado con un enfoque **profesional y educativo**, integrando buenas prácticas de:
+
+* Arquitectura full‑stack
+* Seguridad
+* Separación de responsabilidades
+* Código mantenible
+
+---
+
+## Autor
+
+Jorge Satomi Minami Aguilera – Ingeniero Mecatrónico | Desarrollador Backend & frontend 
+Daniel Jimenez – Desarrollador Full-Stack | DevOps – Colaboración clave en diseño del Frontend,
+Dockerización del ecosistema y despliegue del modelo de ML en la nube.
+
+---
+
+## Estado del proyecto
+
+En desarrollo / mejoras continuas
+
+Próximos hitos:
+
+* Mejorar modelo predictivo
+* Métricas de precisión
+* Despliegue en la nube
+* Implementacion de gráficas avanzadas en el Dashboard
+* UI/UX enhancements
+* Despligue completo del frontend en servicions cloud (Vercel/OCI/AWS)
+
+---
+
+✨ *FlightOnTime — prediciendo el futuro de los vuelos* ✨
