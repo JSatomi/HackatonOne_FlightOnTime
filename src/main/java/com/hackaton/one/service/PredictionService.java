@@ -70,11 +70,11 @@ public class PredictionService {
         if (!airlineRepository.existsByCode(request.getAerolinea())) {
             throw new IllegalArgumentException("La aerolínea " + request.getAerolinea() + " no está permitida.");
         }
-        if (airportRepository.existsByIataCode(request.getOrigen())) {
-            throw new IllegalArgumentException("El aeropuerto de origen " + request.getOrigen() + " no existe.");
+        if (!airportRepository.existsByIataCode(request.getOrigen())) {
+            throw new IllegalArgumentException("El aeropuerto de origen " + request.getOrigen() + " no existe.!");
         }
-        if (airportRepository.existsByIataCode(request.getDestino())) {
-            throw new IllegalArgumentException("El aeropuerto de destino " + request.getDestino() + " no existe.");
+        if (!airportRepository.existsByIataCode(request.getDestino())) {
+            throw new IllegalArgumentException("El aeropuerto de destino " + request.getDestino() + " no existe.!");
         }
         if (request.getOrigen().equalsIgnoreCase(request.getDestino())) {
             throw new IllegalArgumentException("Origen y destino no pueden ser iguales");
