@@ -1,0 +1,54 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: flight-mysql
+    restart: always
+    environment:
+      # Estos valores se toman de el archivo .env o del sistema
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
+    ports:
+      - "3307:3306"
+    # VOLUMEN: Para que los datos no se borren al apagar el contenedor
+    volumes:
+      - db_data:/var/lib/mysql
+    # RED: Conexión interna aislada
+    networks:
+      - flight-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: danieljimenez982/hackatonone_flightontime:latest
+    container_name: flight-app-container
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - mysql_host=${MYSQL_HOST}
+      - mysql_user=${MYSQL_USER}
+      - mysql_password=${MYSQL_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/flightontime?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+      - SPRING_FLYWAY_USER=${MYSQL_USER}
+      - SPRING_FLYWAY_PASSWORD=${MYSQL_PASSWORD}
+    networks:
+      - flight-network
+
+# Definición de Recursos Externos
+networks:
+  flight-network:
+    driver: bridge
+
+volumes:
+  db_data:

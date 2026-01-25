@@ -1,0 +1,41 @@
+name: Publicar en Docker Hub
+
+on:
+  push:
+    branches: ["main"] # Se activa al subir cambios a la rama main
+  workflow_dispatch: # Permite ejecutarlo manualmente desde la pestaña Actions
+
+jobs:
+  docker-hub-publish:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Descargar el código del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Iniciar sesión en Docker Hub usando tus secretos
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 3. Extraer etiquetas y metadatos automáticamente
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: danieljimenez982/hackatonone_flightontime
+          tags: |
+            type=ref,event=branch
+            type=sha,format=short
+            latest
+
+      # 4. Construir la imagen y subirla (Push)
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

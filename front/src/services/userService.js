@@ -1,0 +1,15 @@
+import axios from "axios";
+
+const API_URL = "http://149.130.177.229:8080";
+
+export const getLoggedUser = async () => {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.get(API_URL + "/User/user/me", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};

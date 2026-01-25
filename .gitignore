@@ -1,0 +1,32 @@
+# Java
+target/
+*.class
+
+# Node / React
+front/node_modules/
+front/dist/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+# IntelliJ
+.idea/
+*.iml
+# Maven
+target/
+.mvn/
+mvnw
+mvnw.cmd
+# Local Env
+.env
+
+# Herramientas de Frontend
+front/.vite/
+front/node_modules/
+front/dist/
+
