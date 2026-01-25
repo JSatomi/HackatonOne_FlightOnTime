@@ -11,6 +11,7 @@ public class WebClienteMLConfig {
     public WebClient webClient() {
         return WebClient.builder()
                 .baseUrl("https://stonedjjh-flight-prediction-api.hf.space")
+             //  .baseUrl("http://localhost:8000")
                 .build();
     }
 }

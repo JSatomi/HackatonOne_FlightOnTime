@@ -39,7 +39,7 @@ public class PredictionService {
         User user = (User) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         // 1. VALIDACIÓN DE NEGOCIO: ¿Existen en nuestra base de datos?
-        validateExistence(request);
+      //  validateExistence(request);
 
         //2. DUPLICADOS
         boolean exists = repository.existsByUserAndAirlineAndOriginAndDestinationAndDepartureDateAndDistanceKm(
@@ -66,36 +66,48 @@ public class PredictionService {
         return response;
     }
 
-    private void validateExistence(PredictionRequestDTO request) {
+ private void validateExistence(PredictionRequestDTO request) {
+        String origenClean = request.getOrigen().trim().toUpperCase();
+        String destinoClean = request.getDestino().trim().toUpperCase();
+        // Si NO existe la aerolínea
         if (!airlineRepository.existsByCode(request.getAerolinea())) {
             throw new IllegalArgumentException("La aerolínea " + request.getAerolinea() + " no está permitida.");
         }
-        if (airportRepository.existsByIataCode(request.getOrigen())) {
-            throw new IllegalArgumentException("El aeropuerto de origen " + request.getOrigen() + " no existe.");
+
+        if (!airportRepository.existsByIataCode(origenClean)) {
+            throw new RuntimeException("El aeropuerto de origen " + origenClean + " no existe. !");
         }
-        if (airportRepository.existsByIataCode(request.getDestino())) {
-            throw new IllegalArgumentException("El aeropuerto de destino " + request.getDestino() + " no existe.");
+
+        if (!airportRepository.existsByIataCode(destinoClean)) {
+            throw new RuntimeException("El aeropuerto de destino " + destinoClean + " no existe. !");
         }
+
         if (request.getOrigen().equalsIgnoreCase(request.getDestino())) {
             throw new IllegalArgumentException("Origen y destino no pueden ser iguales");
         }
     }
 
     //Simulacion para saber si funciona
-    @Transactional
     private PredictionResponseDTO executePrediccion(PredictionRequestDTO request) {
+        System.out.println("DEBUG FRONTEND -> Aerolinea: [" + request.getAerolinea() + "]");
+        System.out.println("DEBUG FRONTEND -> Origen: [" + request.getOrigen() + "]");
+        System.out.println("DEBUG FRONTEND -> Destino: [" + request.getDestino() + "]");
+
         PredictionResponseDTO dto = new PredictionResponseDTO();
-
-        if (request.getOrigen().equals(request.getDestino())) {
-            throw new IllegalArgumentException("Origen y destino no pueden ser iguales");
-        }
-        dto = webClient.post()
-                .uri("/predict")
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(PredictionResponseDTO.class)
-                .block();
-
+try {
+    if (request.getOrigen().equals(request.getDestino())) {
+        throw new IllegalArgumentException("Origen y destino no pueden ser iguales");
+    }
+    dto = webClient.post()
+            .uri("/predict")
+            .bodyValue(request)
+            .retrieve()
+            .bodyToMono(PredictionResponseDTO.class)
+            .block();
+}catch (Exception e){
+    System.err.println("FALLÓ LA CONEXIÓN AL MODELO: " + e.getMessage());
+    throw new RuntimeException("El modelo local no respondió correctamente.");
+}
 /*        Utilizado para realizar pruebas
         if (request.getDistancia_km() > 300) {
             dto.setPrevision("Retrasado");

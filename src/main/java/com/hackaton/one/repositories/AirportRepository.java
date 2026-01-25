@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface AirportRepository extends JpaRepository<Airport, Long> {
     Optional<Airport> findByIataCode(String iataCode);
 
+    // Este es el que vamos a usar
     boolean existsByIataCode(String iataCode);
 }

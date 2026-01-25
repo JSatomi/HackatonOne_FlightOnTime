@@ -57,11 +57,13 @@ function Prediction() {
     setError("");
     setResult(null);
 
+    // Validación de fecha
     if (new Date(form.fecha_partida) < new Date()) {
       setError("La fecha de partida no puede estar en el pasado.");
       return;
     }
 
+    // Validación de ruta
     if (form.origen === form.destino) {
       setError("El origen y destino no pueden ser el mismo.");
       return;
@@ -69,10 +71,16 @@ function Prediction() {
 
     setLoading(true);
     try {
-      const data = await predictFlight(form);
+      const payload = {
+        ...form,
+        distancia_km: parseInt(form.distancia_km, 10) 
+      };
+
+      const data = await predictFlight(payload);
       setResult(data);
     } catch (err) {
-      setError(err.message || "Error al realizar la predicción.");
+      const backendMessage = err.response?.data?.message || err.message || "Error al realizar la predicción.";
+      setError(backendMessage);
     } finally {
       setLoading(false);
     }
@@ -125,12 +133,13 @@ function Prediction() {
                       className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none transition">
                       <option value="">Selecciona una aerolínea</option>
                       {airlines.map(air => (
-                        <option key={air.id} value={air.code}>{air.name} ({air.code})</option>
+                        <option key={`air-${air.id}`} value={air.code}>{air.name} ({air.code})</option>
                       ))}
                     </select>
                   </div>
                 </div>
 
+                {/* --- SELECT ORIGEN --- */}
                 <div>
                   <label className="text-sm font-bold text-slate-600 ml-1">Origen</label>
                   <div className="relative mt-1">
@@ -138,13 +147,17 @@ function Prediction() {
                     <select name="origen" value={form.origen} onChange={handleChange} required
                       className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl">
                       <option value="">Origen</option>
-                      {airports.map(port => (
-                        <option key={port.id} value={port.iataCode}>{port.iataCode} - {port.city}</option>
-                      ))}
+                      {airports.map(port => {
+                        const code = port.iata_code || port.iataCode || "";
+                        return (
+                          <option key={`port-org-${port.id}`} value={code}>{code} - {port.city}</option>
+                        );
+                      })}
                     </select>
                   </div>
                 </div>
 
+                {/* --- SELECT DESTINO --- */}
                 <div>
                   <label className="text-sm font-bold text-slate-600 ml-1">Destino</label>
                   <div className="relative mt-1">
@@ -152,9 +165,12 @@ function Prediction() {
                     <select name="destino" value={form.destino} onChange={handleChange} required
                       className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl">
                       <option value="">Destino</option>
-                      {airports.map(port => (
-                        <option key={port.id} value={port.iataCode}>{port.iataCode} - {port.city}</option>
-                      ))}
+                      {airports.map(port => {
+                        const code = port.iata_code || port.iataCode || "";
+                        return (
+                          <option key={`port-dest-${port.id}`} value={code}>{code} - {port.city}</option>
+                        );
+                      })}
                     </select>
                   </div>
                 </div>

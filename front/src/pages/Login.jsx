@@ -45,7 +45,7 @@ function Login() {
   return (
     <div className="grid place-content-center h-screen">
       <div className="border-2 rounded-md  border-black-500 w-sm m-2 p-5">
-        <h2 className="text-2xl text-center">Login</h2>
+        <h2 className="text-2xl text-center">Login!</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
