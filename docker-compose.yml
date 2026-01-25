@@ -25,9 +25,7 @@ services:
       retries: 5
 
   app:
-  #  image: danieljimenez982/hackatonone_flightontime:latest
-    build: .
-
+    image: danieljimenez982/hackatonone_flightontime:latest
     container_name: flight-app-container
     restart: on-failure
     ports:
@@ -54,4 +52,3 @@ networks:
 
 volumes:
   db_data:
-
