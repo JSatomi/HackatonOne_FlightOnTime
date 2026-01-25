@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "http://149.130.177.229:8080";
+import { API_BASE_URL } from "../config/apiConfig";
+
+const API_URL = `${API_BASE_URL}`;
 
 export const getLoggedUser = async () => {
   const token = localStorage.getItem("token");
