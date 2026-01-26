@@ -1,4 +1,4 @@
-INSERT INTO airports (iata_code, city) VALUES 
+INSERT IGNORE INTO airports (iata_code, city) VALUES
 ('MHT', 'Manchester, NH'),
 ('IAD', 'Washington, DC'),
 ('EWR', 'Newark, NJ'),
