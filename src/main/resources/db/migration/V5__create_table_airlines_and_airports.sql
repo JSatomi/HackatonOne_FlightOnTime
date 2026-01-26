@@ -8,4 +8,3 @@ CREATE TABLE airports (
 
 -- Datos iniciales (Ejemplos)
 INSERT INTO airlines (code, name) VALUES ('DL', 'Delta Airlines'), ('AA', 'American Airlines'), ('UA', 'United Airlines');
-INSERT INTO airports (iata_code, city) VALUES ('LGA', 'New York'), ('TPA', 'Tampa'), ('LAX', 'Los Angeles');
